@@ -1,0 +1,3 @@
+[submodule "submodules/teeterbot"]
+	path = submodules/teeterbot
+	url = https://github.com/robustify/teeterbot
