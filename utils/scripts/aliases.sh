@@ -1,3 +1,3 @@
 #!/bin/sh
 
-alias rosws="cd /opt/self_balancing_robot/src/"
+# Custom project aliases should be defined here
