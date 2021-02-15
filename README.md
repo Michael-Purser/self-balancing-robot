@@ -22,7 +22,7 @@ There are no guarantees that this will work on another system configuration.
    $ git clone git@github.com:Michael-Purser/self_balancing_robot.git ./self_balancing_robot/src/
    ```
 
-2. Set permissions for the workspace.<br>
+3. Set permissions for the workspace.<br>
    *If you cloned the code into a directory normally owned by root, you need to perform this step. If you cloned the code into a directory owned by the local user, you can ignore this step.*
    ```
    $ sudo chmod 755 <DIR>/self_balancing_robot
@@ -30,7 +30,7 @@ There are no guarantees that this will work on another system configuration.
    $ sudo chown :$USER <DIR>/self_balancing_robot
    ```
 
-3. Initialize and build the workspace:
+4. Initialize and build the workspace:
    ```
    $ cd <DIR>/self_balancing_robot/src
    $ catkin init
@@ -38,14 +38,14 @@ There are no guarantees that this will work on another system configuration.
    ```
    The build should succeed and create the `build/`, `devel/` and `logs/` directories within `<DIR>/self_balancing_robot/`.
 
-4. In your `~/.bashrc` file, add the following lines
+5. In your `~/.bashrc` file, add the following lines
    (**these must always be the bottom-most lines in your .bashrc file**):
    ```
    source <DIR>/self_balancing_robot/devel/setup.bash
    source <DIR>/self_balancing_robot/src/utils/scripts/setup.bash
    ```
 
-5. Close the current terminal, open a new terminal and make sure `ROS_WORKSPACE` has been set:
+6. Close the current terminal, open a new terminal and make sure `ROS_WORKSPACE` has been set:
    ```
    $ echo $ROS_WORKSPACE
    ```
