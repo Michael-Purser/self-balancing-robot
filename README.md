@@ -51,3 +51,9 @@ There are no guarantees that this will work on another system configuration.
    ```
    This should return `<DIR>/self_balancing_robot/src`
    You can now change to the project source directory by using the alias `roscd`.
+
+7. Initialize, fetch and checkout the git submodules:
+   ```
+   $ cd <DIR>/self_balancing_robot/src           # Note: you can now use also roscd for this
+   $ git submodule update --init --recursive
+   ```
