@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>teeterbot_listener</name>
+  <version>0.1.0</version>
+  <description>Package that listens to the teeterbot topics</description>
+  <author email="michael.purser@outlook.be">Michael Purser</author>
+  <maintainer email="michael.purser@outlook.be">Michael Purser</maintainer>
+
+  <license>GPLv3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+</package>
