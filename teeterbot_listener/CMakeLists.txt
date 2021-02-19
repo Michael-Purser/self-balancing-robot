@@ -27,3 +27,18 @@ include_directories(
 )
 
 add_subdirectory(src/${PROJECT_NAME})
+
+install(
+  DIRECTORY
+    include/${PROJECT_NAME}/
+  DESTINATION
+    ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+)
+
+install(
+  DIRECTORY
+    launch/
+  DESTINATION
+    ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
