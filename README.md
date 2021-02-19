@@ -69,3 +69,21 @@ There are no guarantees that this will work on another system configuration.
    $ cd <DIR>/self_balancing_robot/src           # Note: you can now use also roscd for this
    $ git submodule update --init --recursive
    ```
+
+## Running the code
+
+1. Start a ROS master:
+   ```
+   $ roscore
+   ```
+
+2. In another terminal, start the teeterbot simulation:
+   ```
+   $ roslaunch teeterbot_gazebo teeterbot_empty_world.launch
+   ```
+
+3. In another terminal, start the teeterbot listener:
+   ```
+   $ roslaunch teeterbot_listener teeterbot_listener.launch
+   ```
+   The listener should now start outputting joint state information to the terminal.
