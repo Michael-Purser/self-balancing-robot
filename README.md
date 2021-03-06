@@ -2,12 +2,15 @@
 
 This repository is developed and tested with the following system requirements and versions.
 There are no guarantees that this will work on another system configuration.
- - Ubuntu 18.04 LTS
+ - Ubuntu 18.04 LTS.
  - [ROS Melodic](https://wiki.ros.org/melodic).
    - Install `ros-melodic-desktop-full` to also install the necessary ROS packages to communicate with Gazebo.
- - [Gazebo 9.0 or later](http://www.gazebosim.org/tutorials?tut=install_ubuntu&cat=install).
+ - [Gazebo](http://www.gazebosim.org/tutorials?tut=install_ubuntu&cat=install) 9.0.
    - Follow the step-by-step installation guide, and install both `gazebo9` and `libgazebo9-dev`.
- - [Catkin Tools](https://catkin-tools.readthedocs.io/en/latest/installing.html).
+ - [Catkin Tools](https://catkin-tools.readthedocs.io/en/latest/installing.html) 0.6.1.
+ - [GCC](https://gcc.gnu.org/releases.html) 10.1.<br>
+   A guide to updating GCC/G++ on linux systems can be found [here](https://azrael.digipen.edu/~mmead/www/mg/update-compilers/index.html).
+ - [CMake](https://cmake.org/) 3.10.2.
 
 
 ## Developer Setup
@@ -30,7 +33,13 @@ There are no guarantees that this will work on another system configuration.
    $ sudo chown :$USER <DIR>/self_balancing_robot
    ```
 
-3. **Initialize and build the workspace**<br>
+3. **Initialize, fetch and checkout the git submodules**<br>
+   ```
+   $ cd <DIR>/self_balancing_robot/src
+   $ git submodule update --init --recursive
+   ```
+
+4. **Initialize and build the workspace**<br>
    Execute the commands below to configure the catkin workspace:
    ```
    $ cd <DIR>/self_balancing_robot
@@ -49,7 +58,7 @@ There are no guarantees that this will work on another system configuration.
    ```
    The build should succeed and create the `build/`, `devel/` and `logs/` directories within `<DIR>/self_balancing_robot/`.
 
-4. **Automatically source the setup files**<br>
+5. **Automatically source the setup files**<br>
    In your `~/.bashrc` file, add the following lines.<br>
    *These must always be the bottom-most lines in your .bashrc file!*
    ```
@@ -62,12 +71,22 @@ There are no guarantees that this will work on another system configuration.
    $ echo $ROS_WORKSPACE
    ```
    This should return `<DIR>/self_balancing_robot/src`.
+
    You can now change to the project source directory by using the alias `roscd`.
 
-5. **Initialize, fetch and checkout the git submodules**<br>
+6. **Install the package dependencies**<br>
+   Package dependencies are not automatically installed when you clone the repository.
+
+   In case you have not initialized rosdep yet, please run:
    ```
-   $ cd <DIR>/self_balancing_robot/src           # Note: you can now use also roscd for this
-   $ git submodule update --init --recursive
+   sudo rosdep init
+   ```
+
+   To install the dependencies, open a new terminal or resource your ~/.bashrc file, then enter the following commands:
+   ```
+   cd <DIR>/self_balancing_robot/
+   rosdep update
+   rosdep install --from-paths src --ignore-src -y
    ```
 
 ## Running the code
@@ -86,4 +105,4 @@ There are no guarantees that this will work on another system configuration.
    ```
    $ roslaunch teeterbot_listener teeterbot_listener.launch
    ```
-   The listener should now start outputting joint state information to the terminal.
+   The listener should start outputting joint state information to the terminal.
