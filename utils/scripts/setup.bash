@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export ROSCONSOLE_FORMAT='[${severity}] [${walltime}][${thread}][${node}][${function}:${line}]: ${message}'
+
 CURRENT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 PROJECT_DIR_NAME="self_balancing_robot"
 
