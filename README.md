@@ -12,6 +12,8 @@ There are no guarantees that this will work on another system configuration.
    A guide to updating GCC/G++ on linux systems can be found [here](https://azrael.digipen.edu/~mmead/www/mg/update-compilers/index.html).
  - [CMake](https://cmake.org/) 3.10.2.
 
+Gazebo takes a long time to shutdown. For faster iteration, edit
+`sudo edit /opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/nodeprocess.py` and change line 57/58.
 
 ## Developer Setup
 
@@ -106,3 +108,6 @@ There are no guarantees that this will work on another system configuration.
    $ roslaunch teeterbot_listener teeterbot_listener.launch
    ```
    The listener should start outputting joint state information to the terminal.
+
+
+
