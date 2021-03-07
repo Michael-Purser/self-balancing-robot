@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>teeterbot_controller</name>
+  <version>0.0.0</version>
+  <description>The teeterbot_controller package</description>
+  <license>MIT</license>
+
+  <author email="matthijsvankeirsbilck@gmail.com">Matthijs Van keirsbilck</author>
+  <maintainer email="matthijsvankeirsbilck@gmail.com">Matthijs Van keirsbilck</maintainer>
+  <!-- <maintainer email="matthijsvankeirsbilck@gmail.com">Matthijs Van keirsbilck</maintainer>
+  <maintainer email="matthijsvankeirsbilck@gmail.com">Matthijs Van keirsbilck</maintainer> -->
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>tf</depend>
+</package>
