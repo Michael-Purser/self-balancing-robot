@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+  <node name="teeterbot_controller" pkg="teeterbot_controller" type="teeterbot_controller" output="screen">
+    <param name="proportional_gain" type="double" value="5"/>
+  </node>
+</launch>

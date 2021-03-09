@@ -9,9 +9,10 @@
   <maintainer email="matthijsvankeirsbilck@gmail.com">Matthijs Van keirsbilck</maintainer>
   <!-- <maintainer email="matthijsvankeirsbilck@gmail.com">Matthijs Van keirsbilck</maintainer>
   <maintainer email="matthijsvankeirsbilck@gmail.com">Matthijs Van keirsbilck</maintainer> -->
-  
+
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
   <depend>tf</depend>
 </package>

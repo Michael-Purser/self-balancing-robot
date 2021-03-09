@@ -7,6 +7,7 @@ add_compile_options(-std=c++17)
 set(PROJECT_CATKIN_DEPENDENCIES
     roscpp
     sensor_msgs
+    std_msgs
     tf
 )
 
