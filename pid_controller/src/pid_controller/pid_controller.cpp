@@ -20,15 +20,9 @@ pid_controller::PIDController::spin() const
 
   while(ros::ok())
   {
-    if (imu_subscriber_.getNumPublishers() > 0)
-    {
-      ros::spinOnce();
-      spin_rate.sleep();
-    }
-    else
-    {
-      ROS_WARN_STREAM_THROTTLE(0.3, "No Imu messages published yet!");
-    }
+    ros::spinOnce();
+    sendControlSignal();
+    spin_rate.sleep();
   }
 }
 
