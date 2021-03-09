@@ -1,17 +1,33 @@
-#!/bin/bash
+XAUTH=/tmp/.docker.xauth
+if [ ! -f $XAUTH ]
+then
+    xauth_list=$(xauth nlist :0 | sed -e 's/^..../ffff/')
+    if [ ! -z "$xauth_list" ]
+    then
+        echo $xauth_list | xauth -f $XAUTH nmerge -
+    else
+        touch $XAUTH
+    fi
+    chmod a+r $XAUTH
+fi
 
-# Main docker launch script
+if [[ $WORKSPACE == "" ]]
+then
+    echo "You need to run 'export WORKSPACE=<self_balancing_robot_root>!"
+    exit
+fi
 
-source ~/.bashrc
-
-# 1. start docker container
-# capture id with sed (sed -n Xp gets the X'th line of output)
-echo "launching container. This takes about 20s on first call b/c 'catkin clean' (see docker_entrypoint.sh)"
-dockerid=$(bash _launch_container.sh | sed -n 1p)
-echo "started container ${dockerid}"
-
-# 2. start 3 terminals connected to the container
-# TODO TMUXINATOR setup?
-# docker exec -it "${dockerid}" /bin/bash -c "roscore"
-# docker exec -it "${dockerid}" /bin/bash -c "roslaunch teeterbot_gazebo teeterbot_empty_world.launch"
-# docker exec -it "${dockerid}" /bin/bash -c "roslaunch teeterbot_listener teeterbot_listener.launch"
+docker run -it --rm \
+    --name="teeterbot_dev_container" \
+    --env="DISPLAY=$DISPLAY" \
+    --env="QT_X11_NO_MITSHM=1" \
+    --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+    --env="XAUTHORITY=$XAUTH" \
+    --volume="$XAUTH:$XAUTH" \
+    --user $(id -u):$(id -g) \
+    --device /dev/snd \
+    --ipc=host --gpus=all \
+    --privileged --net=host \
+    --volume="${WORKSPACE}:/home/user/self_balancing_robot:rw" \
+    self_balancing_robot_image \
+    bash
