@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+  <node name="pid_controller" pkg="pid_controller" type="pid_controller" output="screen"/>
+</launch>
