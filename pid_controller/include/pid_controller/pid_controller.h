@@ -18,6 +18,7 @@ public:
 private:
   void imuCallback(const sensor_msgs::ImuConstPtr& imu_msg);
 
+  double current_pitch_;
   ros::Subscriber imu_subscriber_;
 };
 

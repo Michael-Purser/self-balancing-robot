@@ -1,10 +1,12 @@
+#include "pid_controller/helpers.h"
 #include "pid_controller/pid_controller.h"
 
 #include <ros/console.h>
 #include <ros/node_handle.h>
 #include <ros/rate.h>
 
-pid_controller::PIDController::PIDController()
+pid_controller::PIDController::PIDController() :
+    current_pitch_ {0.0}
 {
   ros::NodeHandle node_handle;
 
@@ -33,5 +35,5 @@ pid_controller::PIDController::spin() const
 void
 pid_controller::PIDController::imuCallback(const sensor_msgs::ImuConstPtr& imu_msg)
 {
-  ROS_INFO_STREAM("Heard a message!");
+  current_pitch_ = getPitchFromImuMessage(imu_msg);
 }
