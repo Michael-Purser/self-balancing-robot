@@ -9,7 +9,9 @@ main(int argc, char** argv)
 {
   ros::init(argc, argv, "pid_controller");
 
-  pid_controller::PIDController controller;
+  ros::NodeHandle node_handle;
+
+  pid_controller::PIDController controller(node_handle);
 
   controller.spin();
 

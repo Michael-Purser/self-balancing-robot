@@ -2,13 +2,11 @@
 #include "pid_controller/pid_controller.h"
 
 #include <ros/console.h>
-#include <ros/node_handle.h>
 #include <ros/rate.h>
 
-pid_controller::PIDController::PIDController() :
+pid_controller::PIDController::PIDController(ros::NodeHandle& node_handle) :
     current_pitch_ {0.0}
 {
-  ros::NodeHandle node_handle;
 
   imu_subscriber_ = node_handle.subscribe("/teeterbot/imu", 1, &PIDController::imuCallback, this);
 }
