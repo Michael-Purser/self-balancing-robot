@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <launch>
-  <node name="pid_controller" pkg="pid_controller" type="pid_controller" output="screen"/>
+  <node name="pid_controller" pkg="pid_controller" type="pid_controller" output="screen">
+    <param name="cutoff_pitch" type="double" value="0.3" />
+    <param name="pitch_setpoint" type="double" value="0.0" />
+    <param name="proportional_control_gain" type="double" value="50.0" />
+    <param name="spin_rate" type="double" value="500.0" />
+  </node>
 </launch>

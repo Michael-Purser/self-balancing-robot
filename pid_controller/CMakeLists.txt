@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(PROJECT_CATKIN_DEPENDENCIES
     roscpp
     sensor_msgs
+    std_msgs
     tf
 )
 
