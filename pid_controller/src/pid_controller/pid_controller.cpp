@@ -17,6 +17,7 @@ pid_controller::PIDController::PIDController(ros::NodeHandle& node_handle) :
   node_handle.getParam("/pid_controller/proportional_control_gain", proportional_control_gain_);
   node_handle.getParam("/pid_controller/spin_rate", spin_rate_);
 
+  printParams();
   ros::Duration(1.0).sleep();
 
   std::string left_wheel_topic {"/teeterbot/left_speed_cmd"};
@@ -44,6 +45,15 @@ void
 pid_controller::PIDController::imuCallback(const sensor_msgs::ImuConstPtr& imu_msg)
 {
   current_pitch_ = getPitchFromImuMessage(imu_msg);
+}
+
+void
+pid_controller::PIDController::printParams()
+{
+  ROS_INFO_STREAM("PARAMETER: cutoff_pitch_: " << cutoff_pitch_);
+  ROS_INFO_STREAM("PARAMETER: pitch_setpoint_: " << pitch_setpoint_);
+  ROS_INFO_STREAM("PARAMETER: proportional_control_gain_: " << proportional_control_gain_);
+  ROS_INFO_STREAM("PARAMETER: spin_rate_: " << spin_rate_);
 }
 
 void

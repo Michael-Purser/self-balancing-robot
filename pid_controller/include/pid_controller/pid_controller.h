@@ -20,6 +20,7 @@ public:
 
 private:
   void imuCallback(const sensor_msgs::ImuConstPtr& imu_msg);
+  void printParams();
   void sendControlSignal();
 
   double current_pitch_;
