@@ -1,6 +1,8 @@
 #ifndef PID_CONTROLLER_PID_CONTROLLER_ROS_INTERFACE
 #define PID_CONTROLLER_PID_CONTROLLER_ROS_INTERFACE
 
+#include "pid_controller/pid_controller.h"
+
 #include <ros/node_handle.h>
 #include <ros/rate.h>
 #include <ros/subscriber.h>
@@ -20,18 +22,16 @@ public:
 
 private:
   void imuCallback(const sensor_msgs::ImuConstPtr& imu_msg);
-  void printParams();
+  void printInterfaceParams() const;
+  void printControllerParams() const;
   void publishTopics();
 
-  double current_pitch_;
-  double cutoff_pitch_;
-  double pitch_setpoint_;
-  double proportional_control_gain_;
+  PIDController controller_;
   double spin_rate_;
 
   ros::Subscriber imu_subscriber_;
-  ros::Publisher left_wheel_publisher_;
-  ros::Publisher right_wheel_publisher_;
+  ros::Publisher left_wheel_speed_cmd_publisher_;
+  ros::Publisher right_wheel_speed_cmd_publisher_;
 };
 
 }

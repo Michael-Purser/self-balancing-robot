@@ -9,23 +9,22 @@
 #include <iostream>
 #include <string>
 
-pid_controller::PIDControllerROSInterface::PIDControllerROSInterface(ros::NodeHandle& node_handle) :
-    current_pitch_ {0.0}
+pid_controller::PIDControllerROSInterface::PIDControllerROSInterface(ros::NodeHandle& node_handle)
 {
-  node_handle.getParam("/pid_controller/cutoff_pitch", cutoff_pitch_);
-  node_handle.getParam("/pid_controller/pitch_setpoint", pitch_setpoint_);
-  node_handle.getParam("/pid_controller/proportional_control_gain", proportional_control_gain_);
+  node_handle.getParam("/pid_controller/cutoff_pitch", controller_.cutoff_value);
+  node_handle.getParam("/pid_controller/pitch_setpoint", controller_.setpoint);
+  node_handle.getParam("/pid_controller/proportional_control_gain", controller_.proportional_control_gain);
+  node_handle.getParam("/pid_controller/integral_control_gain", controller_.integral_control_gain);
+  node_handle.getParam("/pid_controller/derivative_control_gain", controller_.derivative_control_gain);
   node_handle.getParam("/pid_controller/spin_rate", spin_rate_);
 
-  printParams();
+  printInterfaceParams();
+  printControllerParams();
   ros::Duration(1.0).sleep();
 
-  std::string left_wheel_topic {"/teeterbot/left_speed_cmd"};
-  std::string right_wheel_topic {"/teeterbot/right_speed_cmd"};
-
   imu_subscriber_ = node_handle.subscribe("/teeterbot/imu", 1, &PIDControllerROSInterface::imuCallback, this);
-  left_wheel_publisher_ = node_handle.advertise<std_msgs::Float64>("/teeterbot/left_speed_cmd", 1);
-  right_wheel_publisher_ = node_handle.advertise<std_msgs::Float64>("/teeterbot/right_speed_cmd", 1);
+  left_wheel_speed_cmd_publisher_ = node_handle.advertise<std_msgs::Float64>("/teeterbot/left_speed_cmd", 1);
+  right_wheel_speed_cmd_publisher_ = node_handle.advertise<std_msgs::Float64>("/teeterbot/right_speed_cmd", 1);
 }
 
 void
@@ -46,30 +45,30 @@ pid_controller::PIDControllerROSInterface::spin()
 void
 pid_controller::PIDControllerROSInterface::imuCallback(const sensor_msgs::ImuConstPtr& imu_msg)
 {
-  current_pitch_ = getPitchFromImuMessage(imu_msg);
+  controller_.current_value = getPitchFromImuMessage(imu_msg);
 }
 
 void
-pid_controller::PIDControllerROSInterface::printParams()
+pid_controller::PIDControllerROSInterface::printInterfaceParams() const
 {
-  ROS_INFO_STREAM("PARAMETER: cutoff_pitch_: " << cutoff_pitch_);
-  ROS_INFO_STREAM("PARAMETER: pitch_setpoint_: " << pitch_setpoint_);
-  ROS_INFO_STREAM("PARAMETER: proportional_control_gain_: " << proportional_control_gain_);
-  ROS_INFO_STREAM("PARAMETER: spin_rate_: " << spin_rate_);
+  ROS_INFO_STREAM("INTERFACE PARAMETER: spin rate: " << spin_rate_);
+}
+
+void
+pid_controller::PIDControllerROSInterface::printControllerParams() const
+{
+  ROS_INFO_STREAM("CONTROLLER PARAMETER: cutoff value: " << controller_.cutoff_value);
+  ROS_INFO_STREAM("CONTROLLER PARAMETER: setpoint: " << controller_.setpoint);
+  ROS_INFO_STREAM("CONTROLLER PARAMETER: P gain: " << controller_.proportional_control_gain);
+  ROS_INFO_STREAM("CONTROLLER PARAMETER: I gain: " << controller_.integral_control_gain);
+  ROS_INFO_STREAM("CONTROLLER PARAMETER: D gain: " << controller_.derivative_control_gain);
 }
 
 void
 pid_controller::PIDControllerROSInterface::publishTopics()
 {
   std_msgs::Float64 msg;
-  if (-cutoff_pitch_ <= current_pitch_ && current_pitch_ <= cutoff_pitch_)
-  {
-    msg.data = proportional_control_gain_ * (current_pitch_ - pitch_setpoint_);
-  }
-  else
-  {
-    msg.data = 0.0;
-  }
-  left_wheel_publisher_.publish(msg);
-  right_wheel_publisher_.publish(msg);
+  msg.data = controller_.computeNextControlSignal();
+  left_wheel_speed_cmd_publisher_.publish(msg);
+  right_wheel_speed_cmd_publisher_.publish(msg);
 }
