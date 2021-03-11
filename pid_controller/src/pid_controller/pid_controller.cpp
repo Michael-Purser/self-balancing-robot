@@ -31,6 +31,8 @@ pid_controller::PIDController::PIDController(ros::NodeHandle& node_handle) :
 void
 pid_controller::PIDController::spin()
 {
+  ROS_INFO_STREAM("Starting main control loop");
+
   ros::Rate spin_rate(spin_rate_);
 
   while(ros::ok())
