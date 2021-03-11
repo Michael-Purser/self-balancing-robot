@@ -1,5 +1,5 @@
-#ifndef PID_CONTROLLER_PID_CONTROLLER
-#define PID_CONTROLLER_PID_CONTROLLER
+#ifndef PID_CONTROLLER_PID_CONTROLLER_ROS_INTERFACE
+#define PID_CONTROLLER_PID_CONTROLLER_ROS_INTERFACE
 
 #include <ros/node_handle.h>
 #include <ros/rate.h>
@@ -11,17 +11,17 @@
 namespace pid_controller
 {
 
-class PIDController
+class PIDControllerROSInterface
 {
 public:
-  PIDController(ros::NodeHandle& node_handle);
+  PIDControllerROSInterface(ros::NodeHandle& node_handle);
 
   void spin();
 
 private:
   void imuCallback(const sensor_msgs::ImuConstPtr& imu_msg);
   void printParams();
-  void sendControlSignal();
+  void publishTopics();
 
   double current_pitch_;
   double cutoff_pitch_;

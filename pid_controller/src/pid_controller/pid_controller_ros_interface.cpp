@@ -1,5 +1,5 @@
 #include "pid_controller/helpers.h"
-#include "pid_controller/pid_controller.h"
+#include "pid_controller/pid_controller_ros_interface.h"
 
 #include <ros/console.h>
 #include <ros/duration.h>
@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-pid_controller::PIDController::PIDController(ros::NodeHandle& node_handle) :
+pid_controller::PIDControllerROSInterface::PIDControllerROSInterface(ros::NodeHandle& node_handle) :
     current_pitch_ {0.0}
 {
   node_handle.getParam("/pid_controller/cutoff_pitch", cutoff_pitch_);
@@ -23,13 +23,13 @@ pid_controller::PIDController::PIDController(ros::NodeHandle& node_handle) :
   std::string left_wheel_topic {"/teeterbot/left_speed_cmd"};
   std::string right_wheel_topic {"/teeterbot/right_speed_cmd"};
 
-  imu_subscriber_ = node_handle.subscribe("/teeterbot/imu", 1, &PIDController::imuCallback, this);
+  imu_subscriber_ = node_handle.subscribe("/teeterbot/imu", 1, &PIDControllerROSInterface::imuCallback, this);
   left_wheel_publisher_ = node_handle.advertise<std_msgs::Float64>("/teeterbot/left_speed_cmd", 1);
   right_wheel_publisher_ = node_handle.advertise<std_msgs::Float64>("/teeterbot/right_speed_cmd", 1);
 }
 
 void
-pid_controller::PIDController::spin()
+pid_controller::PIDControllerROSInterface::spin()
 {
   ROS_INFO_STREAM("Starting main control loop");
 
@@ -38,19 +38,19 @@ pid_controller::PIDController::spin()
   while(ros::ok())
   {
     ros::spinOnce();
-    sendControlSignal();
+    publishTopics();
     spin_rate.sleep();
   }
 }
 
 void
-pid_controller::PIDController::imuCallback(const sensor_msgs::ImuConstPtr& imu_msg)
+pid_controller::PIDControllerROSInterface::imuCallback(const sensor_msgs::ImuConstPtr& imu_msg)
 {
   current_pitch_ = getPitchFromImuMessage(imu_msg);
 }
 
 void
-pid_controller::PIDController::printParams()
+pid_controller::PIDControllerROSInterface::printParams()
 {
   ROS_INFO_STREAM("PARAMETER: cutoff_pitch_: " << cutoff_pitch_);
   ROS_INFO_STREAM("PARAMETER: pitch_setpoint_: " << pitch_setpoint_);
@@ -59,7 +59,7 @@ pid_controller::PIDController::printParams()
 }
 
 void
-pid_controller::PIDController::sendControlSignal()
+pid_controller::PIDControllerROSInterface::publishTopics()
 {
   std_msgs::Float64 msg;
   if (-cutoff_pitch_ <= current_pitch_ && current_pitch_ <= cutoff_pitch_)
