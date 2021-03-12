@@ -1,0 +1,4 @@
+float64 proportional_control_signal
+float64 integral_control_signal
+float64 derivative_control_signal
+float64 total_control_signal
