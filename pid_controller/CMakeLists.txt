@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(PROJECT_CATKIN_DEPENDENCIES
     roscpp
+    self_balancing_robot_msgs
     sensor_msgs
     std_msgs
     tf

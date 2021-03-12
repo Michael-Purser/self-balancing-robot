@@ -10,6 +10,8 @@
 
 #include <sensor_msgs/Imu.h>
 
+#include <string>
+
 namespace pid_controller
 {
 
@@ -33,6 +35,8 @@ private:
   ros::Publisher left_wheel_speed_cmd_publisher_;
   ros::Publisher right_wheel_speed_cmd_publisher_;
 };
+
+std::string controllerStatusToMsgStatus(const PIDControllerStatus status);
 
 }
 

@@ -1,5 +1,6 @@
 #include "pid_controller/helpers.h"
 #include "pid_controller/pid_controller_ros_interface.h"
+#include "self_balancing_robot_msgs/ControllerStatus.h"
 
 #include <ros/console.h>
 #include <ros/duration.h>
@@ -71,4 +72,22 @@ pid_controller::PIDControllerROSInterface::publishTopics()
   msg.data = controller_.computeNextControlSignal();
   left_wheel_speed_cmd_publisher_.publish(msg);
   right_wheel_speed_cmd_publisher_.publish(msg);
+}
+
+std::string
+pid_controller::controllerStatusToMsgStatus(const PIDControllerStatus status)
+{
+  switch (status)
+  {
+    case (PIDControllerStatus::Error):
+      return self_balancing_robot_msgs::ControllerStatus::ERROR;
+    case (PIDControllerStatus::Idle):
+      return self_balancing_robot_msgs::ControllerStatus::IDLE;
+    case (PIDControllerStatus::Running):
+      return self_balancing_robot_msgs::ControllerStatus::RUNNING;
+    case (PIDControllerStatus::ShuttingDown):
+      return self_balancing_robot_msgs::ControllerStatus::SHUTTING_DOWN;
+    default:
+      return self_balancing_robot_msgs::ControllerStatus::STOPPED;
+  }
 }
