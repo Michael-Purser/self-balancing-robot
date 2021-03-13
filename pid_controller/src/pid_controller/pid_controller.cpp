@@ -9,7 +9,10 @@ pid_controller::PIDController::PIDController() :
     proportional_control_gain {0.0},
     integral_control_gain {0.0},
     derivative_control_gain {0.0},
+    time_step {0.0},
     controller_status_ {PIDControllerStatus::Idle},
+    accumulated_error_ {0.0},
+    previous_error_ {0.0},
     current_error_ {0.0},
     proportional_control_signal_ {0.0},
     integral_control_signal_ {0.0},
@@ -59,14 +62,14 @@ pid_controller::PIDController::computeNextControlSignal()
     computeProportionalControlSignal();
     computeIntegralControlSignal();
     computeDerivativeControlSignal();
+    updateInternalVariables();
   }
   else
   {
     controller_status_ = (controller_status_ == PIDControllerStatus::Idle)
                         ? controller_status_ : PIDControllerStatus::Idle;
-    setControlSignalsToZero();
+    resetInternalVariables();
   }
-
   return proportional_control_signal_ + integral_control_signal_ + derivative_control_signal_;
 }
 
@@ -79,6 +82,9 @@ pid_controller::PIDController::computeProportionalControlSignal()
 void
 pid_controller::PIDController::computeIntegralControlSignal()
 {
+  constexpr double one_half {0.5};
+  accumulated_error_ += time_step * one_half * (previous_error_ + current_error_);
+  integral_control_signal_ = integral_control_gain * accumulated_error_;
 }
 
 void
@@ -87,10 +93,19 @@ pid_controller::PIDController::computeDerivativeControlSignal()
 }
 
 void
-pid_controller::PIDController::setControlSignalsToZero()
+pid_controller::PIDController::updateInternalVariables()
 {
-  constexpr double zero_control_signal {0.0};
-  proportional_control_signal_ = zero_control_signal;
-  integral_control_signal_ = zero_control_signal;
-  derivative_control_signal_ - zero_control_signal;
+  previous_error_ = current_error_;
+}
+
+void
+pid_controller::PIDController::resetInternalVariables()
+{
+  constexpr double zero {0.0};
+  accumulated_error_ = zero;
+  previous_error_ = zero;
+  current_error_ = zero;
+  proportional_control_signal_ = zero;
+  integral_control_signal_ = zero;
+  derivative_control_signal_ = zero;
 }

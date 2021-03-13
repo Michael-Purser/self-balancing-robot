@@ -20,6 +20,8 @@ pid_controller::PIDControllerROSInterface::PIDControllerROSInterface(ros::NodeHa
   node_handle.getParam("/pid_controller/derivative_control_gain", controller_.derivative_control_gain);
   node_handle.getParam("/pid_controller/spin_rate", spin_rate_);
 
+  controller_.time_step = 1.0 / spin_rate_;
+
   printInterfaceParams();
   printControllerParams();
   ros::Duration(1.0).sleep();
@@ -63,6 +65,7 @@ pid_controller::PIDControllerROSInterface::printControllerParams() const
 {
   ROS_INFO_STREAM("CONTROLLER PARAMETER: cutoff value: " << controller_.cutoff_value);
   ROS_INFO_STREAM("CONTROLLER PARAMETER: setpoint: " << controller_.setpoint);
+  ROS_INFO_STREAM("CONTROLLER PARAMETER: timestep for calculations: " << controller_.time_step);
   ROS_INFO_STREAM("CONTROLLER PARAMETER: P gain: " << controller_.proportional_control_gain);
   ROS_INFO_STREAM("CONTROLLER PARAMETER: I gain: " << controller_.integral_control_gain);
   ROS_INFO_STREAM("CONTROLLER PARAMETER: D gain: " << controller_.derivative_control_gain);

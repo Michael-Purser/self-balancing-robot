@@ -33,14 +33,18 @@ public:
   double proportional_control_gain;
   double integral_control_gain;
   double derivative_control_gain;
+  double time_step;
 
 private:
   void computeProportionalControlSignal();
   void computeIntegralControlSignal();
   void computeDerivativeControlSignal();
-  void setControlSignalsToZero();
+  void updateInternalVariables();
+  void resetInternalVariables();
 
   PIDControllerStatus controller_status_;
+  double accumulated_error_;
+  double previous_error_;
   double current_error_;
   double proportional_control_signal_;
   double integral_control_signal_;
