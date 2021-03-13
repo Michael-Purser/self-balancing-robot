@@ -1,9 +1,10 @@
 #include "pid_controller/helpers.h"
 #include "pid_controller/pid_controller_ros_interface.h"
-#include "self_balancing_robot_msgs/ControllerStatus.h"
+#include "self_balancing_robot_msgs/PIDControllerInfo.h"
 
 #include <ros/console.h>
 #include <ros/duration.h>
+#include <ros/time.h>
 
 #include <std_msgs/Float64.h>
 
@@ -24,6 +25,8 @@ pid_controller::PIDControllerROSInterface::PIDControllerROSInterface(ros::NodeHa
   ros::Duration(1.0).sleep();
 
   imu_subscriber_ = node_handle.subscribe("/teeterbot/imu", 1, &PIDControllerROSInterface::imuCallback, this);
+  controller_info_publisher_ = node_handle.advertise<self_balancing_robot_msgs::PIDControllerInfo>(
+    "/teeterbot/pid_controller/controller_info", 1);
   left_wheel_speed_cmd_publisher_ = node_handle.advertise<std_msgs::Float64>("/teeterbot/left_speed_cmd", 1);
   right_wheel_speed_cmd_publisher_ = node_handle.advertise<std_msgs::Float64>("/teeterbot/right_speed_cmd", 1);
 }
@@ -68,10 +71,24 @@ pid_controller::PIDControllerROSInterface::printControllerParams() const
 void
 pid_controller::PIDControllerROSInterface::publishTopics()
 {
-  std_msgs::Float64 msg;
-  msg.data = controller_.computeNextControlSignal();
-  left_wheel_speed_cmd_publisher_.publish(msg);
-  right_wheel_speed_cmd_publisher_.publish(msg);
+  const ros::Time current_time {ros::Time::now()};
+  const double next_control_signal = controller_.computeNextControlSignal();
+
+  self_balancing_robot_msgs::PIDControllerInfo controller_info_msg;
+  controller_info_msg.header.stamp.sec = current_time.toSec();
+  controller_info_msg.header.stamp.nsec = current_time.toNSec();
+  controller_info_msg.status.status = controllerStatusToMsgStatus(controller_.controllerStatus());
+  controller_info_msg.error.control_error = controller_.currentError();
+  controller_info_msg.control_signals.proportional_control_signal = controller_.proportionalControlSignal();
+  controller_info_msg.control_signals.integral_control_signal = controller_.integralControlSignal();
+  controller_info_msg.control_signals.derivative_control_signal = controller_.derivativeControlSignal();
+  controller_info_msg.control_signals.total_control_signal = next_control_signal;
+  controller_info_publisher_.publish(controller_info_msg);
+
+  std_msgs::Float64 speed_cmd_msg;
+  speed_cmd_msg.data = next_control_signal;
+  left_wheel_speed_cmd_publisher_.publish(speed_cmd_msg);
+  right_wheel_speed_cmd_publisher_.publish(speed_cmd_msg);
 }
 
 std::string

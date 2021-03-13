@@ -32,6 +32,7 @@ private:
   double spin_rate_;
 
   ros::Subscriber imu_subscriber_;
+  ros::Publisher controller_info_publisher_;
   ros::Publisher left_wheel_speed_cmd_publisher_;
   ros::Publisher right_wheel_speed_cmd_publisher_;
 };
