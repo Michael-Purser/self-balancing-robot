@@ -1,5 +1,7 @@
 #include "pid_controller/pid_controller.h"
 
+#include <cmath>
+
 pid_controller::PIDController::PIDController() :
     current_value {0.0},
     cutoff_value {0.0},
@@ -48,7 +50,47 @@ pid_controller::PIDController::derivativeControlSignal() const
 double
 pid_controller::PIDController::computeNextControlSignal()
 {
-  controller_status_ = (controller_status_ == PIDControllerStatus::Running)
-                       ? controller_status_ : PIDControllerStatus::Running;
+  current_error_ = current_value - setpoint;
+
+  if (std::abs(current_error_) <= cutoff_value)
+  {
+    controller_status_ = (controller_status_ == PIDControllerStatus::Running)
+                        ? controller_status_ : PIDControllerStatus::Running;
+    computeProportionalControlSignal();
+    computeIntegralControlSignal();
+    computeDerivativeControlSignal();
+  }
+  else
+  {
+    controller_status_ = (controller_status_ == PIDControllerStatus::Idle)
+                        ? controller_status_ : PIDControllerStatus::Idle;
+    setControlSignalsToZero();
+  }
+
   return proportional_control_signal_ + integral_control_signal_ + derivative_control_signal_;
+}
+
+void
+pid_controller::PIDController::computeProportionalControlSignal()
+{
+  proportional_control_signal_ = proportional_control_gain * (current_error_);
+}
+
+void
+pid_controller::PIDController::computeIntegralControlSignal()
+{
+}
+
+void
+pid_controller::PIDController::computeDerivativeControlSignal()
+{
+}
+
+void
+pid_controller::PIDController::setControlSignalsToZero()
+{
+  constexpr double zero_control_signal {0.0};
+  proportional_control_signal_ = zero_control_signal;
+  integral_control_signal_ = zero_control_signal;
+  derivative_control_signal_ - zero_control_signal;
 }

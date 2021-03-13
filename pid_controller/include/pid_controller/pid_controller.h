@@ -35,6 +35,11 @@ public:
   double derivative_control_gain;
 
 private:
+  void computeProportionalControlSignal();
+  void computeIntegralControlSignal();
+  void computeDerivativeControlSignal();
+  void setControlSignalsToZero();
+
   PIDControllerStatus controller_status_;
   double current_error_;
   double proportional_control_signal_;
