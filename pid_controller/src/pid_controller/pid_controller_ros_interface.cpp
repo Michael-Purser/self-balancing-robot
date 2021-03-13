@@ -8,7 +8,6 @@
 
 #include <std_msgs/Float64.h>
 
-#include <iostream>
 #include <string>
 
 pid_controller::PIDControllerROSInterface::PIDControllerROSInterface(ros::NodeHandle& node_handle)
