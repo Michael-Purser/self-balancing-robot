@@ -102,12 +102,3 @@ Gazebo takes a long time to shutdown. For faster iteration, edit
    ```
    $ roslaunch teeterbot_gazebo teeterbot_empty_world.launch
    ```
-
-3. In another terminal, start the teeterbot listener:
-   ```
-   $ roslaunch teeterbot_listener teeterbot_listener.launch
-   ```
-   The listener should start outputting joint state information to the terminal.
-
-
-
