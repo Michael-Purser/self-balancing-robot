@@ -5,26 +5,42 @@
     ```bash
     sudo groupadd docker
     sudo usermod -aG docker ${USER}
-    su -s ${USER}
-
-    docker run hello-world
+    su -s ${USER} # if this fails with 'authentication failure', log out and log back in (or reboot)
     ```
-3. install [nvidia-docker2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) for GPU access
+3. Test with `docker run hello-world`
+
+
+### Optional setup
+
+4. Install latest nvidia drivers
+    * use `nvidia-smi` to find version of installed driver
+    * go to "software and updates" -> "additional drivers" -> select nvidia-driver-460. You might need to restart.
+5. install [nvidia-docker2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) for GPU access
+6. Test with `sudo docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi`
 
 ----
 ## Teeterbot: Docker how to 
 
 ```
-cd src/utils/docker
-ocker build -t self_balancing_robot_image --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) ./utils/docker/
-export WORKSPACE=<path to catkin workspace> && bash utils/docker/launch.sh
+cd src/
+
+# compile the container (it gives a few red messages, that's ok)
+docker build -t self_balancing_robot_image --build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) ./utils/docker/
+
+# only if you have a pre-existing catkin workspace
+`catkin clean -y`
+
+# launch the container
+bash utils/docker/launch.sh $(realpath ..)
+
+# In the container, you can start a pre-configured tmux session with Gazebo, Roscore etc with `
 ```
 
 In the container, you're the same user as on the host system. If you need access to root, use `su` command, and `abc123` as password (see Dockerfile)
 
 ---- 
 
-## Docker Basics
+## Explanation: Docker Basics
 Docker image consists of read-only layers, each of which represents a Dockerfile instruction. 
 The layers are stacked and each one is a delta of the changes from the previous layer.
 Starting from some Docker image like a clean Ubuntu, we can add layers in a Dockerfile, then compile (`docker build`) to obtain a Docker image.
@@ -60,6 +76,7 @@ Each instruction creates one layer:
 ### Starting/running the container
 
 * Build/compile the Docker image: `docker build --tag <image_name> .`: compiles Dockerfile in current directory, and names it <image_name>. Don't forget the `.` at the end!
+    * the `docker_entrypoint.sh` file is executed when the container starts, so has access to the host file system via mounts (see launch.sh). It will set up ROS/catkin workspace.
 
 * Basic command: `docker run <image>`.
     To go into interactive terminal inside the container, use `-it` argument (interactive).
@@ -92,8 +109,6 @@ Each instruction creates one layer:
     So put layers you're likely to change often at the bottom
 
 *  bash inside docker is by default ugly; I use sexy-bash-prompt, which has coloring and Git support etc: https://github.com/twolfson/sexy-bash-prompt
-
-*  don't use GIT inside the container since git config isn't set
 
 * it's nice to use TMUX to have multiple terminals inside Docker. 
     * Fancy setup + nice defaults: https://github.com/gpakosz/.tmux

@@ -1,3 +1,6 @@
+#!/bin/bash
+
+# required for access to display using X
 XAUTH=/tmp/.docker.xauth
 if [ ! -f $XAUTH ]
 then
@@ -8,15 +11,16 @@ then
     else
         touch $XAUTH
     fi
-    chmod a+r $XAUTH
+    sudo chmod a+r $XAUTH
 fi
 
-if [[ $WORKSPACE == "" ]]
+if [[ $1 == "" ]]
 then
-    echo "You need to run 'export WORKSPACE=<self_balancing_robot_root>!"
+    echo "You need to pass the workspace directory as argument (parent dir of src/)!"
     exit
 fi
 
+# attach display, audio, GPUs, network, fix permissions and mount data
 docker run -it --rm \
     --name="teeterbot_dev_container" \
     --env="DISPLAY=$DISPLAY" \
@@ -28,6 +32,9 @@ docker run -it --rm \
     --device /dev/snd \
     --ipc=host --gpus=all \
     --privileged --net=host \
-    --volume="${WORKSPACE}:/home/user/self_balancing_robot:rw" \
+    --volume="$1:/home/user/self_balancing_robot:rw" \
+    --volume="$HOME/.gitconfig:/home/user/.gitconfig" \
+    --volume="$HOME/.ssh/:/home/user/.ssh/" \
+    --volume="$HOME/.bash_aliases:/home/user/.bash_aliases" \
     self_balancing_robot_image \
     bash

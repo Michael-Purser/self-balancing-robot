@@ -9,13 +9,11 @@ ENV NVIDIA_DRIVER_CAPABILITIES \
 ARG USER_ID
 ARG GROUP_ID
 
-RUN apt-get update && apt-get install -y apt-utils build-essential psmisc vim git gcc g++ cmake wget less tmux dbus-x11 terminator
+RUN apt-get update && apt-get install -y apt-utils build-essential psmisc vim git gcc g++ cmake wget less tmux dbus-x11 terminator openssh-client
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN apt-get update && apt-get install -y python-catkin-tools
 RUN apt-get update && apt-get install -q -y ros-melodic-hector-gazebo-plugins
-
-EXPOSE 11345
 
 # quick Gazebo shutdown
 RUN sed -i 's/_TIMEOUT_SIGINT  = 15.0/_TIMEOUT_SIGINT  = 0.5/' /opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/nodeprocess.py
