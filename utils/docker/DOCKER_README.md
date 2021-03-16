@@ -107,6 +107,9 @@ Each instruction creates one layer:
     Eg in our case user is in the `src/` folder: `bash utils/docker/launch.sh $(realpath ..)`
     * alternatively, you could use an environment variable  
 
+* you can easily use GIT inside the container if you mount `$HOME/.gitconfig` and `$HOME/.ssh/`. 
+  For automatic passwordless access, run ssh keychain agent with `ssh-add ~/.ssh/id_rsa` in the container.
+
 ---- 
 ### Tips 'n Tricks
 

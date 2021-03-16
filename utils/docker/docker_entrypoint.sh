@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+
 # files mounted from host system, so need to source here instead of in Dockerfile
 echo "source $HOME/self_balancing_robot/devel/setup.bash" >> $HOME/.bashrc
 echo "source $HOME/self_balancing_robot/src/utils/scripts/setup.bash" >> $HOME/.bashrc
@@ -10,6 +11,8 @@ cd $HOME/self_balancing_robot/
 catkin build
 
 clear
+
+ssh-add ~/.ssh/id_rsa
 
 cd $HOME/self_balancing_robot/src
 echo "to start pre-configured tmux session set up for ROS, Gazebo and our current software, use 'bash tmux_session.sh'"
