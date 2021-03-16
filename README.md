@@ -41,7 +41,11 @@ Gazebo takes a long time to shutdown. For faster iteration, edit
    $ git submodule update --init --recursive
    ```
 
-4. **Initialize and build the workspace**<br>
+4. Now, you can choose to  use Docker, or set up your host system.
+   For Docker, see `utils/docker/DOCKER_README.md`, and skip to `Running the code` below.
+   For the host setup, perform steps 5-7.
+
+5. **Initialize and build the workspace**<br>
    Execute the commands below to configure the catkin workspace:
    ```
    $ cd <DIR>/self_balancing_robot
@@ -60,7 +64,7 @@ Gazebo takes a long time to shutdown. For faster iteration, edit
    ```
    The build should succeed and create the `build/`, `devel/` and `logs/` directories within `<DIR>/self_balancing_robot/`.
 
-5. **Automatically source the setup files**<br>
+6. **Automatically source the setup files**<br>
    In your `~/.bashrc` file, add the following lines.<br>
    *These must always be the bottom-most lines in your .bashrc file!*
    ```
@@ -76,7 +80,7 @@ Gazebo takes a long time to shutdown. For faster iteration, edit
 
    You can now change to the project source directory by using the alias `roscd`.
 
-6. **Install the package dependencies**<br>
+7. **Install the package dependencies**<br>
    Package dependencies are not automatically installed when you clone the repository.
 
    In case you have not initialized rosdep yet, please run:
@@ -98,7 +102,12 @@ Gazebo takes a long time to shutdown. For faster iteration, edit
    $ roscore
    ```
 
-2. In another terminal, start the teeterbot simulation:
+2. In another terminal, start the teeterbot simulation with Gazebo:
    ```
    $ roslaunch teeterbot_gazebo teeterbot_empty_world.launch
+   ```
+
+3. In other terminals start your own nodes, for example a motion controller:
+   ```
+   $ roslaunch <your_node> <your_node>.launch
    ```

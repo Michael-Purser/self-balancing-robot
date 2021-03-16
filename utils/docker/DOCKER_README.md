@@ -7,19 +7,23 @@
     sudo usermod -aG docker ${USER}
     su -s ${USER} # if this fails with 'authentication failure', log out and log back in (or reboot)
     ```
-3. Test with `docker run hello-world`
+3. Test with `docker run hello-world`. This should print "Hello from docker! ... For more examples visit docs.docker.com"
 
 
-### Optional setup
+### Optional: GPU acceleration
 
-4. Install latest nvidia drivers
+The simulator (Gazebo) can use GPUs to increase speed and reduce system load significantly. 
+For our super simple empty world, this isn't really required though.
+ 
+1. Install latest nvidia drivers
     * use `nvidia-smi` to find version of installed driver
     * go to "software and updates" -> "additional drivers" -> select nvidia-driver-460. You might need to restart.
-5. install [nvidia-docker2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) for GPU access
-6. Test with `sudo docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi`
+2. install [nvidia-docker2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) for GPU access
+3. Test with `sudo docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi`. 
+    This should print your GPU model, and the container's driver and CUDA version similar to running `nvidia-smi` on the host system
 
 ----
-## Teeterbot: Docker how to 
+## Teeterbot: Docker quickstart
 
 ```
 cd src/
@@ -32,12 +36,12 @@ docker build -t self_balancing_robot_image --build-arg USER_ID=$(id -u) --build-
 
 # launch the container
 bash utils/docker/launch.sh $(realpath ..)
-
-# In the container, you can start a pre-configured tmux session with Gazebo, Roscore etc with `
 ```
 
-In the container, you're the same user as on the host system. If you need access to root, use `su` command, and `abc123` as password (see Dockerfile)
+In the container, you can start a pre-configured tmux session with Gazebo, Roscore etc with `bash tmux_session.sh`.  
+You can get a summary of useful TMUX commands with `bash tmux_help.sh`.
 
+In the container, you're the same user as on the host system.
 ---- 
 
 ## Explanation: Docker Basics
@@ -98,7 +102,10 @@ Each instruction creates one layer:
     * You might need to install [nvidia-docker2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)
 
 * you should put all these things in a bash script to launch the container, like `launch.sh`. 
-    * use some environment variable to make the launch script more flexible: `export WORKSPACE=<your_root_dir> && bash launch.sh `
+    * use an argument to the script to make it more flexible: `bash launch.sh <your_root_dir>`
+    * if you know the path the user is in when calling the script, you can automatically specify the root dir. 
+    Eg in our case user is in the `src/` folder: `bash utils/docker/launch.sh $(realpath ..)`
+    * alternatively, you could use an environment variable  
 
 ---- 
 ### Tips 'n Tricks
