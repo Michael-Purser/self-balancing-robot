@@ -12,6 +12,7 @@ catkin build
 
 clear
 
+eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
 
 cd $HOME/self_balancing_robot/src
