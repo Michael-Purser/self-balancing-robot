@@ -41,10 +41,6 @@ USER user
 RUN cd $HOME && git clone https://github.com/gpakosz/.tmux.git && ln -s -f .tmux/.tmux.conf && cp .tmux/.tmux.conf.local .
 RUN (cd $HOME && ([[ -d sexy-bash-prompt ]] || git clone --depth 1 --config core.autocrlf=false https://github.com/twolfson/sexy-bash-prompt) && cd sexy-bash-prompt && make install) && source ~/.bashrc
 
-# set up catkin for user
-RUN catkin config --extend /opt/ros/melodic --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
-RUN catkin init 
-
 COPY ./docker_entrypoint.sh /tmp/
 ENTRYPOINT ["/bin/bash", "/tmp/docker_entrypoint.sh"]
 CMD ["bash"]
