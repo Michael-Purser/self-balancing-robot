@@ -1,13 +1,18 @@
 #!/bin/bash
 
 echo """
-TMUX basic commands: see https://github.com/gpakosz/.tmux
+TMUX basic commands: see https://github.com/gpakosz/.tmux. 
+For more reference: see https://tmuxcheatsheet.com/.
+
 - commands require a <prefix>, then a key: Ctrl+a = <prefix>
 - a 'window' is like a tab
 - a 'pane' is a subdivision of current terminal, like tiling
 You can use keybindings below or click with mouse to select active pane/window, resize etc
 
 Windows (ie tabs)
+  <prefix> c : create new window
+  <prefix> , : rename current window
+  <prefix  & : close current window
   <prefix> C-h and <prefix> C-l let you navigate windows
   <prefix> Tab brings you to the last active window
 

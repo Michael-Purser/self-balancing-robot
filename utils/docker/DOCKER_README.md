@@ -12,15 +12,19 @@
 
 ### Optional: GPU acceleration
 
-The simulator (Gazebo) can use GPUs to increase speed and reduce system load significantly. 
-For our super simple empty world, this isn't really required though.
- 
-1. Install latest nvidia drivers
-    * use `nvidia-smi` to find version of installed driver
-    * go to "software and updates" -> "additional drivers" -> select nvidia-driver-460. You might need to restart.
-2. install [nvidia-docker2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) for GPU access
-3. Test with `sudo docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi`. 
-    This should print your GPU model, and the container's driver and CUDA version similar to running `nvidia-smi` on the host system
+[Gazebo installation instructions](http://gazebosim.org/tutorials?tut=guided_b1&cat=)
+
+It's unclear whether Gazebo actually uses GPUs. 
+I couldn't find anything on the above docs page except "you will need a computer with dedicated GPU (Nvidia works well on Ubuntu)".
+For using NVIDIA graphics cards in Docker:
+ 1. Install latest nvidia drivers
+     * use `nvidia-smi` to find version of installed driver
+     * go to "software and updates" -> "additional drivers" -> select nvidia-driver-460. You might need to restart.
+ 2. install [nvidia-docker2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) for GPU access
+ 3. Test with `sudo docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi`. 
+     This should print your GPU model, and the container's driver and CUDA version similar to running `nvidia-smi` on the host system
+
+<!-- * For AMD: install latest driver: [https://amdgpu-install.readthedocs.io/en/latest/](https://amdgpu-install.readthedocs.io/en/latest/) -->
 
 ----
 ## Teeterbot: Docker quickstart
