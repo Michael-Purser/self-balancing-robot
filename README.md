@@ -1,7 +1,7 @@
 ## System Requirements
 
-This repository is developed and tested with the following system requirements and versions.
-There are no guarantees that this will work on another system configuration.
+We provide a Docker container for convenience (see utils/docker/); the below requirements are if you want to install on your system directly.
+
  - Ubuntu 18.04 LTS.
  - [ROS Melodic](https://wiki.ros.org/melodic).
    - Install `ros-melodic-desktop-full` to also install the necessary ROS packages to communicate with Gazebo.
@@ -13,9 +13,11 @@ There are no guarantees that this will work on another system configuration.
  - [CMake](https://cmake.org/) 3.10.2.
 
 Gazebo takes a long time to shutdown. For faster iteration, edit
-`sudo edit /opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/nodeprocess.py` and change line 57/58.
+`sudo edit /opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/nodeprocess.py` and change TIMEOUTs in lines 57/58.
 
 ## Developer Setup
+
+If using the Docker container, you can use Git inside the container. However you'll need to perform the initial pull on your host system.
 
 1. **Choose a local workspace location**<br>
    Choose a location on your machine where to clone the repository.<br>
@@ -42,8 +44,8 @@ Gazebo takes a long time to shutdown. For faster iteration, edit
    ```
 
 4. Now, you can choose to  use Docker, or set up your host system.
-   For Docker, see `utils/docker/DOCKER_README.md`, and skip to `Running the code` below.
-   For the host setup, perform steps 5-7.
+   For Docker, see `utils/docker/README.md`, and skip to `Running the code` below.
+   For the host setup, continue with steps 5-7.
 
 5. **Initialize and build the workspace**<br>
    Execute the commands below to configure the catkin workspace:
