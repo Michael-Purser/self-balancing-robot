@@ -21,9 +21,14 @@ RUN source /opt/ros/melodic/setup.bash
 RUN sed -i 's/_TIMEOUT_SIGINT  = 15.0/_TIMEOUT_SIGINT  = 0.5/' /opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/nodeprocess.py
 RUN sed -i 's/_TIMEOUT_SIGTERM = 15.0/_TIMEOUT_SIGTERM = 0.5/' /opt/ros/melodic/lib/python2.7/dist-packages/roslaunch/nodeprocess.py
 
+# # update CMAKE (for python-control-toolbox)
+RUN apt-get update && apt-get install -y python3-dev python3-pip ninja-build gfortran
+RUN cd /tmp && wget https://github.com/Kitware/CMake/releases/download/v3.20.0/cmake-3.20.0.tar.gz && tar xvf cmake-3.20.0.tar.gz
+RUN cd /tmp/cmake-3.20.0 && ./bootstrap && make -j2 && make install
+
 # if we still want root access (eg apt-get install something), use `su` command and 'abc123' as root password
 # disable b/c popential security risk? Though can only modify files mounted in Docker...
-# RUN echo 'root:abc123' | chpasswd
+RUN echo 'root:abc123' | chpasswd
 
 # create new user that matches the host user
 RUN addgroup --gid $GROUP_ID user
@@ -35,7 +40,15 @@ RUN chown -R $USER_ID:$GROUP_ID /home/user/self_balancing_robot
 ENV WS=/home/user/self_balancing_robot/
 WORKDIR /home/user/self_balancing_robot/
 
+RUN apt-get install -y python3-tk
+
 USER user
+
+# python dependencies
+RUN pip3 install scikit-build 
+RUN pip3 install numpy scipy matplotlib
+RUN pip3 install slycot
+RUN pip3 install control tk
 
 # nice bash and tmux prompt, w/ colors and Git support
 RUN cd $HOME && git clone https://github.com/gpakosz/.tmux.git && ln -s -f .tmux/.tmux.conf && cp .tmux/.tmux.conf.local .
